@@ -1,38 +1,40 @@
-﻿(function($) {
+(function($) {
 
-	/*
+	/**
 	 * Cache do bundle I18N
-         */
+	 */
 	var _pageBundle = null;
 
-	/*
+	/**
 	 * Cache das de templates doT compilados
-         */
+	 */
 	var _pageCache = [];
 
-	/*
-	 * Fila de mensagens
-	 * Estrutura JSON : {target: , content: , type: }
-         */
+	/**
+	 * Fila de mensagens Estrutura JSON : {target: , content: , type: }
+	 */
 	var _queuedMessage : null,
 
 
 	tempest = {
 
-		/* Configuracoes de convencoes */
+		/**
+		 * Configuracoes de convencoes
+		 */	
 		config: {
-			appHome : 'home',			// URL utilizada no HASH do permalink
-			appServices : '/s/',                    // Base das URLs de mapeamento das Servlets/Acoes
-			appTemplates : '/templates/',           // Base das URLs de templates
+			appHome : 'home',				// URL utilizada no HASH do permalink
+			appServices : '/s/',			// Base das URLs de mapeamento das Servlets/Acoes
+			appTemplates : '/templates/',   // Base das URLs de templates
 			appBundle : '/bundle',			// URL para carga do mapa/bundle de i18N
 		},
 
-		/*
+		/**
 		 * Faz a navegacao para uma pagina de destino utilizando o HASH da URL
 		 * 
-		 * Params:
-		 *      urlHash: Valor da URL a ser invocada apos a navegacao
-                 *      params: Objeto JSON representandos os valores de parametros a serem adicionados no GET
+		 * @param urlHash
+		 *            Valor da URL a ser invocada apos a navegacao
+		 * @param params
+		 *            Objeto JSON representandos os valores de parametros a serem adicionados no GET
 		 */
 		navigate : function(urlHash, params) {
 			var paramUrl;
@@ -50,13 +52,15 @@
 			}
 		},
 
-		/*
+		/**
 		 * Invocacao AJAX de um servico JSON
 		 * 
-		 * Params:
-		 *   reqMethod: Request method utilizado
-		 *   reqURL: URL para ser invocada
-		 *   params: Objeto JSON com os parametros da invocacao
+		 * @param reqMethod
+		 *            Request method utilizado
+		 * @param reqURL
+		 *            URL para ser invocada
+		 * @param param
+		 *            Objeto JSON com os parametros da invocacao
 		 */
 		invoke : function(reqMethod, reqUrl, params) {
 			var deferred = new $.Deferred();
@@ -74,14 +78,16 @@
 			return deferred.promise();
 		},
 
-		/*
-		 * Rendezia um template HTML/doT num determinado elemento do DOM.
-                 * NOTA: Para melhoria de performance a carga do template e feita apenas uma vez
+		/**
+		 * Rendezia um template HTML/doT num determinado elemento do DOM. <br>
+		 * NOTA: Para melhoria de performance a carga do template e feita apenas uma vez
 		 * 
-		 * Params:
-		 *   target: Seletor CSS do elemento do DOM onde o template sera renderizado
-		 *   templatePath: caminho do arquivo HTML de template
-		 *   data (opcional): Objeto JSON que sera utilizado como contexto {it} do doT
+		 * @param target:
+		 *            Seletor CSS do elemento do DOM onde o template sera renderizado
+		 * @param templatePath
+		 *            caminho do arquivo HTML de template
+		 * @param data
+		 *            (opcional): Objeto JSON que sera utilizado como contexto {it} do doT
 		 */
 		render : function(target, templatePath, data) {
 			target = $(target);
@@ -102,13 +108,16 @@
 		},
 
 
-		/*
+		/**
 		 * Metodo utilitario para execucao de um upload de dados para o servidor
 		 * 
-		 * Params:
-		 *   formUpload: Seletor CSS contendo os dados a serem enviados ao servidor
-		 *   uploadURL: URL de destino do upload
-		 *   iframe: Seletor CSS do IFRAME que utilizadopara o upload. NOTA: O IFRAME pode estar invisivel.
+		 * @param formUpload
+		 *            Seletor CSS contendo os dados a serem enviados ao servidor
+		 * @param uploadURL
+		 *            URL de destino do upload
+		 * @param iframe:
+		 *            Seletor CSS do IFRAME que utilizadopara o upload.<br>
+		 *            NOTA: O IFRAME pode estar invisivel.
 		 */
 		upload : function(formUpload, uploadUrl, iframe) {
 			var deferred = new $.Deferred();
@@ -129,13 +138,15 @@
 			return deferred.promise();
 		},
 
-		/*
+		/**
 		 * Registra/enfilera uma mensagem para ser exibida na proxima renderizacao de pagina, onde seja encontrado o elemento TARGET
 		 * 
-		 * Params:
-		 *   target: Seletor CSS indicando o container onde a mensagem sera exibida
-		 *   content: Conteudo HTML a ser escrito na mensagem
-		 *   type (opcional): Tipo de mensagem a ser renderizado, variavel para a renderizacao do template da mensagem
+		 * @param target:
+		 *            Seletor CSS indicando o container onde a mensagem sera exibida
+		 * @param content
+		 *            Conteudo HTML a ser escrito na mensagem
+		 * @param type
+		 *            (opcional) Tipo de mensagem a ser renderizado, variavel para a renderizacao do template da mensagem
 		 */
 		queueMessage : function(target, content, type) {
 			if (!type) { type = 'info'; }
@@ -147,13 +158,15 @@
 			};
 		},
 
-		/*
+		/**
 		 * Metodo utilizado para mostrar e descarregar a mensagem armazendada na fila de mensagens.
 		 * 
-		 * Params:
-		 *   target: Seletor CSS indicando o container onde a mensagem sera exibida
-		 *   content: Conteudo HTML a ser escrito na mensagem
-		 *   type: Tipo de mensagem a ser renderizado, variavel para a renderizacao do template da mensagem
+		 * @param target
+		 *            Seletor CSS indicando o container onde a mensagem sera exibida
+		 * @param content
+		 *            Conteudo HTML a ser escrito na mensagem
+		 * @param type
+		 *            Tipo de mensagem a ser renderizado, variavel para a renderizacao do template da mensagem
 		 */
 		showMessage : function(target, content, type) {
 			if (content) {
@@ -171,11 +184,10 @@
 	}
 
 
-	/*
-         * Busca e, se necessario carga, do bundle de internacionalizacao.
-	 * O bundle eh armazenado pelo idioma/locale retornado pelo servidor
-         */
-	// Load bundle I18N
+	/**
+	 * Busca e, se necessario carga, do bundle de internacionalizacao.<br>
+	 * A chave do bundle no cache eh o idioma/locale retornado pelo servidor.
+	 */
 	function _loadBundle() {
 		var deferred = new $.Deferred();
 		if (tempest.pageBundle) {
@@ -196,12 +208,12 @@
 		return deferred.promise();
 	}
 
-	/*
-         * Busca e, se necessario, carga da funcao doT no cache de templates.
-         *
-         * Params:
-         *   templateURL: caminho do template. Utilizado como chave do cache
-         */
+	/**
+	 * Busca e, se necessario carga, dos templates e calculo da funcao <b>doT</b> no cache de templates.
+	 * 
+	 * @param templateURL
+	 *            caminho do template. Utilizado como chave do cache
+	 */
 	function _loadTemplate(templateUrl) {
 		var deferred = new $.Deferred();
 		if (tempest.pageCache[templateUrl]) {
