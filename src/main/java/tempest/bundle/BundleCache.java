@@ -1,4 +1,4 @@
-package br.com.tempest.bundle;
+package tempest.bundle;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package br.com.tempest.crypto;
+package tempest.crypto;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -10,8 +10,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 import org.apache.commons.codec.binary.Base64;
-
-import br.com.tempest.auth.TempestIOUtils;
+import tempest.encoding.EncodingUtils;
 
 public class TempestSigner {
 
@@ -29,7 +28,7 @@ public class TempestSigner {
 
     public synchronized String sign(Serializable data) {
         try {
-            byte[] sData = TempestIOUtils.serialize(data);
+            byte[] sData = EncodingUtils.serialize(data);
             return sign(sData);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -54,7 +53,7 @@ public class TempestSigner {
 
     public synchronized boolean verify(String in, Serializable data) {
         try {
-            byte[] sData = TempestIOUtils.serialize(data);
+            byte[] sData = EncodingUtils.serialize(data);
             return verify(in, sData);
         } catch (IOException e) {
             throw new RuntimeException(e);
