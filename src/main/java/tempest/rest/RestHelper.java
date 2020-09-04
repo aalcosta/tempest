@@ -67,7 +67,7 @@ public class RestHelper {
 
     private static RestResponse executeRequest(RestRequest request) {
         final RestResponse response = standardRequests.get(request);
-        return (response != null) ? response : RestInvoker.doRequest(request);
+        return (response != null) ? response : HttpClientInvoker.doRequest(request);
     }
 
 }
