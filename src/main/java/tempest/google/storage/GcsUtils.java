@@ -9,6 +9,7 @@ import tempest.google.auth.IamUtils;
 import tempest.rest.RestHeader;
 import tempest.rest.RestResponse;
 
+import javax.ws.rs.core.Response.Status;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -17,7 +18,6 @@ import java.util.logging.Logger;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.Response.Status.Family.SUCCESSFUL;
-import static javax.ws.rs.core.Response.Status.Family.familyOf;
 import static tempest.encoding.EncodingUtils.DEFAULT_CHARSET;
 import static tempest.rest.RestHelper.doGetRequest;
 import static tempest.rest.RestHelper.doPostRequest;
@@ -90,7 +90,7 @@ public class GcsUtils {
         final String resource = STORAGE_URL + "/b/" + bucket + "/o/" + object;
         RestResponse restResponse = doGetRequest(resource,
                 new RestHeader(AUTHORIZATION, "Bearer " + accessToken));
-        return familyOf(restResponse.status) == SUCCESSFUL
+        return Status.fromStatusCode(restResponse.status).getFamily() == SUCCESSFUL
                 ? EncodingUtils.getBytes(restResponse.content)
                 : null;
     }
